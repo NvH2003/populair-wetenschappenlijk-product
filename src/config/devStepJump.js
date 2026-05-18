@@ -1,9 +1,11 @@
 /**
  * Testnavigatie: spring naar elke stap tijdens ontwikkeling.
  *
- * Standaard AAN in `npm run dev`, UIT in productie-builds.
- * Uitschakelen: zet in `.env` of `.env.local`:
+ * Zichtbaar alleen bij `npm run dev` (niet op de live site na `npm run build` / Vercel).
+ * Tijdens dev uitschakelen: in `.env` of `.env.local`:
  *   VITE_DEV_STEP_JUMP=false
+ *
+ * Let op: `npm run preview` gebruikt een productie-build, dus daar is de knop ook weg.
  */
 
 export const DEV_STEP_JUMP_ENABLED =

@@ -88,7 +88,9 @@ export default function App() {
       >
         <div key={step}>{renderStep()}</div>
       </StepController>
-      <DevStepJump currentStep={step} onJump={jumpToStep} />
+      {import.meta.env.DEV ? (
+        <DevStepJump currentStep={step} onJump={jumpToStep} />
+      ) : null}
     </>
   )
 }

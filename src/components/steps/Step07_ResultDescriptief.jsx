@@ -43,10 +43,7 @@ export default function Step07_ResultDescriptief({ onReady }) {
         <p className="text-orange-400 text-xs font-semibold uppercase tracking-widest mb-2">
           Resultaat · hypothese 2
         </p>
-        <h2 className="text-3xl font-extrabold mb-1">Waargenomen sociale acceptatie</h2>
-        <p className="text-slate-400 text-sm">
-          Vergelijking van alle drie boodschapcondities (ANCOVA)
-        </p>
+        <h2 className="text-3xl font-extrabold">Waargenomen sociale acceptatie</h2>
       </motion.div>
 
       <DaanChat script={script} onComplete={onReady} />

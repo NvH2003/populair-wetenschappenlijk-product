@@ -31,7 +31,7 @@ export default function StepController({ step, totalSteps = 12, canProceed, onNe
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -40 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="h-full"
+            className="h-full min-h-0"
           >
             {children}
           </motion.div>

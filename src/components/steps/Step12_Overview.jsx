@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import DaanChat from '../DaanChat'
+import { capitalizeSentenceStarts } from '../../utils/capitalizeSentenceStarts'
 
 // ─── Takeaway-puzzle ───────────────────────────────────────────────────────
 
@@ -53,6 +54,9 @@ const SHUFFLED = [...SENTENCES].sort((a, b) =>
 )
 
 const CORRECT_IDS = new Set(SENTENCES.filter(s => s.correct).map(s => s.id))
+
+/** Volledige takeaway als lopende tekst na controle */
+const TAKEAWAY_OVERVIEW = `Uit het onderzoek blijkt dat sociale normboodschappen niet effectiever zijn dan sanctionerende boodschappen in het verlagen van de acceptatie van vuurwerkgebruik in voetbalstadions onder fanatieke voetbalsupporters. Tegelijkertijd laat het onderzoek zien dat identificatie met de harde kern sterk samenhangt met een hogere persoonlijke acceptatie, waardoor voetbalorganisaties verder moeten kijken dan losse boodschappen en meer rekening houden met groepsidentiteit, bron en referentiegroep.`
 
 function TakeawayPuzzle({ onComplete }) {
   const [selected, setSelected] = useState(new Set())
@@ -113,7 +117,7 @@ function TakeawayPuzzle({ onComplete }) {
                     : isSelected ? 'text-red-300' : 'text-slate-500'
                   : isSelected ? 'text-white' : 'text-slate-300'
               }>
-                {item.text}
+                {capitalizeSentenceStarts(item.text)}
               </span>
               {checked && isSelected && (
                 <span className={`ml-2 font-bold ${isCorrect ? 'text-green-400' : 'text-red-400'}`}>
@@ -160,6 +164,21 @@ function TakeawayPuzzle({ onComplete }) {
                 : `${correctSelected} van de ${CORRECT_IDS.size} correcte zinnen geselecteerd${wrongSelected > 0 ? `, ${wrongSelected} niet passend` : ''}. De groene zinnen vormen samen de takeaway.`
               }
             </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 }}
+              className="rounded-xl border border-orange-500/40 bg-slate-800/90 px-4 py-4"
+            >
+              <p className="text-orange-400 text-xs font-semibold uppercase tracking-widest mb-2">
+                Takeaway
+              </p>
+              <p className="text-slate-200 text-sm leading-relaxed">
+                {capitalizeSentenceStarts(TAKEAWAY_OVERVIEW)}
+              </p>
+            </motion.div>
+
             <button
               type="button"
               onClick={onComplete}
@@ -180,7 +199,7 @@ const introScript = [
   {
     id: 'open',
     daan: 'We zijn er bijna. Maar ik geef je de takeaway niet zomaar. Jij stelt hem zelf samen.',
-    isEnd: true,
+    waitForContinue: true,
   },
 ]
 
@@ -188,7 +207,7 @@ const outroScript = [
   {
     id: 'end',
     daan: 'Bedankt dat je geluisterd hebt. Dit is mijn wereld en nu begrijp jij hem een stukje beter. Ik hoop dat je er iets aan hebt.',
-    isEnd: true,
+    waitForContinue: true,
   },
 ]
 

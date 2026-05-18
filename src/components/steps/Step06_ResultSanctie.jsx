@@ -49,10 +49,7 @@ export default function Step06_ResultSanctie({ onReady }) {
         <p className="text-orange-400 text-xs font-semibold uppercase tracking-widest mb-2">
           Resultaat · hypothese 1
         </p>
-        <h2 className="text-3xl font-extrabold mb-1">Persoonlijke acceptatie</h2>
-        <p className="text-slate-400 text-sm">
-          Vergelijking van alle drie boodschapcondities (ANCOVA)
-        </p>
+        <h2 className="text-3xl font-extrabold">Persoonlijke acceptatie</h2>
       </motion.div>
 
       <DaanChat script={script} onComplete={onReady} />

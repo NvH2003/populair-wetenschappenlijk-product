@@ -14,6 +14,8 @@ Ik neem je mee door een onderzoek van Noa van Helvoirt over de invloed van commu
 
 We bekijken samen wat er in het onderzoek werd verwacht en ik leg uit waarom. Daarna bekijken we de resultaten en de implicaties van het onderzoek. Misschien kun je er nog iets uit meenemen.
 
+Jij bepaalt trouwens zelf hoe diep je erin duikt. Wil je vooral het grote verhaal, prima. Wil je bij details of cijfers even stilstaan, dan kan dat ook: waar het kan, kies je zelf.
+
 Ik zal ook vragen stellen en jij mag dan antwoord geven. Ik ben ook benieuwd wat jij denkt. Ben je er klaar voor?`,
     question: null,
     options: [

@@ -13,30 +13,41 @@
  *   { id, chartKey: "h1", chartOnly: true, waitForContinue: true }  ← alleen figuur, geen tekst
  */
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import ComparisonBarChart from './ComparisonBarChart'
 import { daanPhoto } from '../assets/images'
+import { capitalizeSentenceStarts } from '../utils/capitalizeSentenceStarts'
 
 // Woorden + witruimte (incl. enters); werkt ook bij lange alinea's
 function tokenizeSpeech(text) {
   return text.match(/\S+|\s+/g) ?? (text ? [text] : [])
 }
 
+/** ms tussen tokens (woord of witruimte); hoger = rustiger meelezen */
+const DEFAULT_SPEECH_TOKEN_MS = 52
+
 // ─── Word-by-word speech reveal ────────────────────────────────────────────
-function SpokenText({ text, speed = 32, onDone }) {
+function SpokenText({ text, speed = DEFAULT_SPEECH_TOKEN_MS, onDone, onProgress }) {
   const tokens = useMemo(() => tokenizeSpeech(text), [text])
   const [count, setCount] = useState(0)
   const doneRef = useRef(false)
   const timerRef = useRef(null)
   const onDoneRef = useRef(onDone)
   onDoneRef.current = onDone
+  const onProgressRef = useRef(onProgress)
+  onProgressRef.current = onProgress
 
   useEffect(() => {
     doneRef.current = false
     setCount(0)
     return () => clearTimeout(timerRef.current)
   }, [text])
+
+  // Na elke zichtbare token: scroll mee (na layout, zodat scrollHeight klopt)
+  useLayoutEffect(() => {
+    onProgressRef.current?.()
+  }, [count])
 
   useEffect(() => {
     if (tokens.length === 0) {
@@ -55,7 +66,7 @@ function SpokenText({ text, speed = 32, onDone }) {
     }
     timerRef.current = setTimeout(() => setCount(c => c + 1), speed)
     return () => clearTimeout(timerRef.current)
-  }, [count, tokens.length])
+  }, [count, tokens.length, speed])
 
   const visible = tokens.slice(0, count).join('')
   const speaking = count < tokens.length
@@ -71,7 +82,8 @@ function SpokenText({ text, speed = 32, onDone }) {
 }
 
 // ─── Bubbles ───────────────────────────────────────────────────────────────
-function DaanBubble({ text, live, onSpeechDone }) {
+function DaanBubble({ text, live, onSpeechDone, onSpeechProgress }) {
+  const displayText = useMemo(() => capitalizeSentenceStarts(text), [text])
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -81,8 +93,14 @@ function DaanBubble({ text, live, onSpeechDone }) {
     >
       <p className="text-slate-100 text-base leading-relaxed">
         {live
-          ? <SpokenText text={text} onDone={onSpeechDone} />
-          : <span className="whitespace-pre-wrap">{text}</span>
+          ? (
+            <SpokenText
+              text={displayText}
+              onDone={onSpeechDone}
+              onProgress={onSpeechProgress}
+            />
+          )
+          : <span className="whitespace-pre-wrap">{displayText}</span>
         }
       </p>
     </motion.div>
@@ -164,7 +182,7 @@ function TextInputArea({ question, onSubmit }) {
       className="flex flex-col gap-2"
     >
       {question && (
-        <p className="text-slate-400 text-sm italic pl-1">{question}</p>
+        <p className="text-slate-400 text-sm italic pl-1">{capitalizeSentenceStarts(question)}</p>
       )}
       <div className="flex gap-2 items-end">
         <textarea
@@ -207,11 +225,21 @@ export default function DaanChat({ script, onComplete, onChoice, onItemFocus }) 
   const choicesRef = useRef({})                        // user choices: scriptId → value
   const startedRef = useRef(false)
   const bottomRef = useRef(null)
+  const threadScrollRef = useRef(null)
 
-  // Scroll to bottom whenever thread grows
+  const scrollThreadToEnd = useCallback(() => {
+    const root = threadScrollRef.current
+    if (root && root.scrollHeight > root.clientHeight) {
+      root.scrollTop = root.scrollHeight
+    }
+    // Ook buiten deze kolom kan scrollen nodig zijn (StepController: flex-1 overflow-y-auto)
+    bottomRef.current?.scrollIntoView({ block: 'end', behavior: 'auto' })
+  }, [])
+
+  // Scroll naar beneden bij nieuwe berichten of UI-blokken
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [thread, showChoices, showContinue, speaking, pendingId])
+    scrollThreadToEnd()
+  }, [thread, showChoices, showContinue, speaking, pendingId, scrollThreadToEnd])
 
   const isEligible = useCallback((item) => {
     if (!item.condition) return true
@@ -315,19 +343,24 @@ export default function DaanChat({ script, onComplete, onChoice, onItemFocus }) 
   }
 
   return (
-    <div className="flex gap-5 items-start">
+    <div className="flex gap-5 items-start min-h-0 min-w-0">
       <DaanSide speaking={speaking} />
 
-      <div className="flex-1 flex flex-col gap-3 max-h-[500px] overflow-y-auto pr-1 pb-1">
+      <div
+        ref={threadScrollRef}
+        className="flex-1 min-h-0 min-w-0 flex flex-col gap-3 max-h-[min(500px,70dvh)] overflow-y-auto overscroll-contain pr-1 pb-1"
+      >
         <AnimatePresence initial={false}>
           {thread.map(item => {
             if (item.type === 'daan') {
+              const isLive = item.id === pendingId
               return (
                 <DaanBubble
                   key={item.id}
                   text={item.text}
-                  live={item.id === pendingId}
+                  live={isLive}
                   onSpeechDone={() => speechDoneRef.current?.()}
+                  onSpeechProgress={isLive ? scrollThreadToEnd : undefined}
                 />
               )
             }
@@ -361,7 +394,7 @@ export default function DaanChat({ script, onComplete, onChoice, onItemFocus }) 
               className="flex flex-col gap-2"
             >
               {showChoices.question && (
-                <p className="text-slate-400 text-sm italic pl-1">{showChoices.question}</p>
+                <p className="text-slate-400 text-sm italic pl-1">{capitalizeSentenceStarts(showChoices.question)}</p>
               )}
               <div className="flex flex-wrap gap-2">
                 {showChoices.options.map(opt => (

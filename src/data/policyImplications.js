@@ -111,7 +111,7 @@ export const IMPLICATIONS_SCRIPT = [
   // ── Afsluiter ────────────────────────────────────────────────────────────
   {
     id: 'close',
-    daan: 'Drie scenario\'s, drie lessen. De kern: niet wat je zegt, maar hoe je het zegt, wie je aanspreekt en wie het zegt. Dat is wat dit onderzoek jou als SLO meegefft.',
+    daan: 'Drie scenario\'s, drie lessen. De kern: niet wat je zegt, maar hoe je het zegt, wie je aanspreekt en wie het zegt. Dat is wat dit onderzoek jou als SLO meegeeft.',
     isEnd: true,
   },
 ]
