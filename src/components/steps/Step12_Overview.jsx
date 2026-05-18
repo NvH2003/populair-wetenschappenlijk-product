@@ -55,8 +55,20 @@ const SHUFFLED = [...SENTENCES].sort((a, b) =>
 
 const CORRECT_IDS = new Set(SENTENCES.filter(s => s.correct).map(s => s.id))
 
-/** Volledige takeaway als lopende tekst na controle */
+/** Volledige takeaway als lopende tekst; Daan spreekt dit na controle uit */
 const TAKEAWAY_OVERVIEW = `Uit het onderzoek blijkt dat sociale normboodschappen niet effectiever zijn dan sanctionerende boodschappen in het verlagen van de acceptatie van vuurwerkgebruik in voetbalstadions onder fanatieke voetbalsupporters. Tegelijkertijd laat het onderzoek zien dat identificatie met de harde kern sterk samenhangt met een hogere persoonlijke acceptatie, waardoor voetbalorganisaties verder moeten kijken dan losse boodschappen en meer rekening houden met groepsidentiteit, bron en referentiegroep.`
+
+const TAKEAWAY_OVERVIEW_SCRIPT = [
+  {
+    id: 'bridge',
+    daan: 'Dit is de takeaway in één keer, zoals het onderzoek die formuleert.',
+  },
+  {
+    id: 'overview',
+    daan: TAKEAWAY_OVERVIEW,
+    waitForContinue: true,
+  },
+]
 
 function TakeawayPuzzle({ onComplete }) {
   const [selected, setSelected] = useState(new Set())
@@ -165,27 +177,13 @@ function TakeawayPuzzle({ onComplete }) {
               }
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 }}
-              className="rounded-xl border border-orange-500/40 bg-slate-800/90 px-4 py-4"
-            >
-              <p className="text-orange-400 text-xs font-semibold uppercase tracking-widest mb-2">
-                Takeaway
-              </p>
-              <p className="text-slate-200 text-sm leading-relaxed">
-                {capitalizeSentenceStarts(TAKEAWAY_OVERVIEW)}
-              </p>
-            </motion.div>
-
-            <button
-              type="button"
-              onClick={onComplete}
-              className="w-full py-3 rounded-full bg-orange-500 hover:bg-orange-400 text-white font-semibold text-sm transition-colors"
-            >
-              Verder
-            </button>
+            <div className="pt-1">
+              <DaanChat
+                key="takeaway-overview"
+                script={TAKEAWAY_OVERVIEW_SCRIPT}
+                onComplete={onComplete}
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

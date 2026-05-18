@@ -50,10 +50,7 @@ export default function Step09_BigFinding({ onReady }) {
         <p className="text-orange-400 text-xs font-semibold uppercase tracking-widest mb-2">
           Resultaat · hypothese 4
         </p>
-        <h2 className="text-3xl font-extrabold mb-1">Identificatie met de harde kern</h2>
-        <p className="text-slate-400 text-sm">
-          2 × 3 ANCOVA: boodschapconditie × identificatie
-        </p>
+        <h2 className="text-3xl font-extrabold">Identificatie met de harde kern</h2>
       </motion.div>
 
       <DaanChat script={script} onComplete={onReady} />

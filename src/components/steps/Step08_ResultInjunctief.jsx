@@ -43,10 +43,7 @@ export default function Step08_ResultInjunctief({ onReady }) {
         <p className="text-orange-400 text-xs font-semibold uppercase tracking-widest mb-2">
           Resultaat · hypothese 3
         </p>
-        <h2 className="text-3xl font-extrabold mb-1">Injunctief vs. descriptief</h2>
-        <p className="text-slate-400 text-sm">
-          Persoonlijke acceptatie (ANCOVA, twee condities)
-        </p>
+        <h2 className="text-3xl font-extrabold">Injunctief vs. descriptief</h2>
       </motion.div>
 
       <DaanChat script={script} onComplete={onReady} />
