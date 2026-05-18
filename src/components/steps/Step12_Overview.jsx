@@ -204,8 +204,8 @@ const introScript = [
 const outroScript = [
   {
     id: 'end',
-    daan: 'Bedankt dat je geluisterd hebt. Dit is mijn wereld en nu begrijp jij hem een stukje beter. Ik hoop dat je er iets aan hebt.',
-    waitForContinue: true,
+    daan: 'Bedankt dat je geluisterd hebt. Dit is mijn wereld en nu begrijp jij hem een stukje beter. Ik hoop dat je er iets aan hebt. Dit is het einde van het verhaal.',
+    isEnd: true,
   },
 ]
 
