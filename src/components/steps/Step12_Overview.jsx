@@ -13,37 +13,37 @@ import { capitalizeSentenceStarts } from '../../utils/capitalizeSentenceStarts'
 const SENTENCES = [
   {
     id: 't1',
-    text: 'Sociale normboodschappen zijn niet effectiever dan sanctionerende boodschappen in het verlagen van de acceptatie van vuurwerkgebruik.',
+    text: 'Normboodschappen zijn niet beter dan sancties in het verlagen van de acceptatie van vuurwerk.',
     correct: true,
   },
   {
     id: 't2',
-    text: 'Identificatie met de harde kern hangt sterk samen met een hogere persoonlijke acceptatie van vuurwerkgebruik.',
+    text: 'Supporters die zich sterk identificeren met de harde kern accepteren vuurwerk meer, ongeacht welke boodschap ze zagen.',
     correct: true,
   },
   {
     id: 't3',
-    text: 'Voetbalorganisaties moeten verder kijken dan losse boodschappen en meer rekening houden met groepsidentiteit, bron en referentiegroep.',
+    text: 'Clubs moeten niet alleen kijken naar welke boodschap ze sturen, maar ook naar wie ze met de boodschap aanspreken en wie de boodschap brengt.',
     correct: true,
   },
   {
     id: 'd1',
-    text: 'Injunctieve normboodschappen zijn effectiever dan descriptieve normboodschappen bij fanatieke supporters.',
+    text: 'Afkeuringsboodschappen werken beter dan feitenboodschappen bij fanatieke supporters.',
     correct: false,
   },
   {
     id: 'd2',
-    text: 'Hoe vaker een boodschap wordt herhaald, hoe lager de acceptatie van vuurwerkgebruik wordt.',
+    text: 'Hoe vaker je een boodschap herhaalt, hoe minder vuurwerk supporters accepteren.',
     correct: false,
   },
   {
     id: 'd3',
-    text: 'Supporters met lage identificatie met de harde kern accepteren vuurwerkgebruik meer dan supporters met hoge identificatie.',
+    text: 'Supporters die zich minder identificeren met de harde kern accepteren vuurwerk meer dan de harde kern zelf.',
     correct: false,
   },
   {
     id: 'd4',
-    text: 'Sanctionerende boodschappen roepen meer weerstand op dan normboodschappen en zijn daardoor het minst effectief.',
+    text: 'Sanctionerende boodschappen roepen zoveel weerstand op dat ze het slechtst werken van de drie.',
     correct: false,
   },
 ]
@@ -56,13 +56,9 @@ const SHUFFLED = [...SENTENCES].sort((a, b) =>
 const CORRECT_IDS = new Set(SENTENCES.filter(s => s.correct).map(s => s.id))
 
 /** Volledige takeaway als lopende tekst; Daan spreekt dit na controle uit */
-const TAKEAWAY_OVERVIEW = `Uit het onderzoek blijkt dat sociale normboodschappen niet effectiever zijn dan sanctionerende boodschappen in het verlagen van de acceptatie van vuurwerkgebruik in voetbalstadions onder fanatieke voetbalsupporters. Tegelijkertijd laat het onderzoek zien dat identificatie met de harde kern sterk samenhangt met een hogere persoonlijke acceptatie, waardoor voetbalorganisaties verder moeten kijken dan losse boodschappen en meer rekening houden met groepsidentiteit, bron en referentiegroep.`
+const TAKEAWAY_OVERVIEW = `Normboodschappen werken niet beter dan sancties. Wel maakt het uit hoe sterk iemand zich met de harde kern verbindt. Clubs moeten dus ook kijken naar wie ze met de boodschap aanspreken en wie de boodschap brengt.`
 
 const TAKEAWAY_OVERVIEW_SCRIPT = [
-  {
-    id: 'bridge',
-    daan: 'Dit is de takeaway in één keer, zoals het onderzoek die formuleert.',
-  },
   {
     id: 'overview',
     daan: TAKEAWAY_OVERVIEW,
@@ -172,8 +168,8 @@ function TakeawayPuzzle({ onComplete }) {
                 : 'bg-slate-800 border-slate-700 text-slate-300'
             }`}>
               {allCorrectPicked
-                ? 'Precies goed. Je hebt de drie kernonderdelen van de takeaway gevonden.'
-                : `${correctSelected} van de ${CORRECT_IDS.size} correcte zinnen geselecteerd${wrongSelected > 0 ? `, ${wrongSelected} niet passend` : ''}. De groene zinnen vormen samen de takeaway.`
+                ? 'Precies goed.'
+                : `${correctSelected} van de ${CORRECT_IDS.size} correct${wrongSelected > 0 ? `, ${wrongSelected} niet passend` : ''}.`
               }
             </div>
 
@@ -196,7 +192,7 @@ function TakeawayPuzzle({ onComplete }) {
 const introScript = [
   {
     id: 'open',
-    daan: 'We zijn er bijna. Maar ik geef je de takeaway niet zomaar. Jij stelt hem zelf samen.',
+    daan: 'Stel de takeaway zelf samen.',
     waitForContinue: true,
   },
 ]
@@ -204,7 +200,7 @@ const introScript = [
 const outroScript = [
   {
     id: 'end',
-    daan: 'Bedankt dat je geluisterd hebt. Dit is mijn wereld en nu begrijp jij hem een stukje beter. Ik hoop dat je er iets aan hebt. Dit is het einde van het verhaal.',
+    daan: "Bedankt dat je er was. Dit is mijn wereld, nu snap jij 'm een stukje beter. Dit is het einde van het verhaal.",
     isEnd: true,
   },
 ]

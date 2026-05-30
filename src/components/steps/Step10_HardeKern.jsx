@@ -11,89 +11,50 @@ const items = [
   { id: 'f', text: 'Supportersvereniging van de eigen club', correct: 'ingroup' },
 ]
 
-const HINTS = {
-  a: 'Dat is wij. Dezelfde mensen, hetzelfde vak, elke wedstrijd opnieuw.',
-  b: 'Dat is zij. Regels en boodschappen van boven, niet uit mijn hoek.',
-  c: 'Dat is zij. De bond is ver van het vak af.',
-  d: 'Dat is wij. Fanatiek, dezelfde club, dezelfde taal op de tribune.',
-  e: 'Dat is zij. Handhaving voelt als controle van buitenaf.',
-  f: 'Dat is wij. Officieel misschien, maar nog steeds van onze club, dichter bij ons dan de bond.',
-}
-
 const introScript = [
   {
-    id: 'perspective',
-    daan: 'Belangrijk: denk niet vanuit jouw eigen blik, als SLO of als neutrale toeschouwer. Stap opzij en bedenk hoe ík het zie, vanuit het vak, als fanatieke supporter.',
-  },
-  {
     id: 'challenge',
-    daan: 'Jouw beurt. Zes groepen rond het stadion. Zet ze bij wij of bij zij zoals jij denkt dat ík ze zou indelen, niet zoals jij het zelf zou doen. Ik hou mijn mond nog even.',
+    daan: 'Groepsidentiteit maakt het grootste verschil. Stap in mijn schoenen: wie is wij, wie is zij?',
     isEnd: true,
   },
 ]
 
-function buildDebriefScript(correctCount, placements) {
+function buildDebriefScript(correctCount) {
   const total = items.length
-  const wrongItems = items.filter(i => placements[i.id] !== i.correct)
 
   const script = [
     {
       id: 'score',
       daan:
         correctCount === total
-          ? `Alle ${total} goed. Je hebt mijn verdeling goed ingeschat.`
+          ? `Alle ${total} goed.`
           : correctCount >= 4
-            ? `${correctCount} van de ${total}. Redelijk, maar ik ben nog niet overtuigd dat je mijn wereld echt snapt.`
-            : `${correctCount} van de ${total}. Lastiger dan je dacht, hè?`,
+            ? `${correctCount} van de ${total}. Redelijk.`
+            : `${correctCount} van de ${total}. Lastig.`,
     },
   ]
 
   if (correctCount === total) {
-    script.push(
-      {
-        id: 'close-perfect',
-        daan: 'Dat verschil is precies het punt. Niet elke "club"-stem is voor mij dezelfde stem. De bond en het bestuur staan ver van het vak; andere supporters van dezelfde club kunnen wél bij wij horen.',
-        waitForContinue: true,
-        continueLabel: 'Verder',
-      },
-      { id: 'end', daan: 'Dan gaan we verder.', isEnd: true },
-    )
+    script.push({
+      id: 'close-perfect',
+      daan: 'Niet elke club-stem staat gelijk aan mijn stem.',
+      waitForContinue: true,
+      continueLabel: 'Verder',
+    })
     return script
   }
 
   script.push({
-    id: 'pick-mistake',
-    daan: 'Welke had jij het verst fout? Kies er één, dan zeg ik alleen daar iets over.',
-    question: null,
-    options: wrongItems.map(i => ({
-      label: i.text.length > 52 ? `${i.text.slice(0, 49)}…` : i.text,
-      value: i.id,
-    })),
+    id: 'wrap',
+    daan: 'Voor mij gaat het om wie bij mijn groep hoort.',
+    waitForContinue: true,
+    continueLabel: 'Verder',
   })
-
-  wrongItems.forEach(item => {
-    const placed = placements[item.id]
-    script.push({
-      id: `hint-${item.id}`,
-      daan: `${HINTS[item.id]} Jij zette deze bij ${placed === 'ingroup' ? 'wij' : 'zij'}.`,
-      condition: { ref: 'pick-mistake', value: item.id },
-    })
-  })
-
-  script.push(
-    {
-      id: 'wrap',
-      daan: 'Zie je het? Voor mij gaat het niet om "supporter" in het algemeen, maar om wie echt bij mijn groep hoort.',
-      waitForContinue: true,
-      continueLabel: 'Verder',
-    },
-    { id: 'end', daan: 'Dan gaan we verder.', isEnd: true },
-  )
 
   return script
 }
 
-export default function Step10_HardeKern({ onReady }) {
+export default function Step10_HardeKern({ onComplete }) {
   const [placements, setPlacements] = useState({})
   const [checked, setChecked] = useState(false)
   const [introDone, setIntroDone] = useState(false)
@@ -102,8 +63,8 @@ export default function Step10_HardeKern({ onReady }) {
   const correctCount = items.filter(i => placements[i.id] === i.correct).length
 
   const debriefScript = useMemo(
-    () => (checked ? buildDebriefScript(correctCount, placements) : []),
-    [checked, correctCount, placements],
+    () => (checked ? buildDebriefScript(correctCount) : []),
+    [checked, correctCount],
   )
 
   function place(id, group) {
@@ -126,9 +87,6 @@ export default function Step10_HardeKern({ onReady }) {
           Uitdaging
         </p>
         <h2 className="text-3xl font-extrabold">Wij of zij?</h2>
-        <p className="text-slate-400 text-sm mt-1">
-          Denk vanuit Daans perspectief: wie is wij, wie is zij?
-        </p>
       </div>
 
       <DaanChat script={introScript} onComplete={() => setIntroDone(true)} />
@@ -243,7 +201,7 @@ export default function Step10_HardeKern({ onReady }) {
                 <DaanChat
                   key={`debrief-${correctCount}`}
                   script={debriefScript}
-                  onComplete={onReady}
+                  onComplete={onComplete}
                 />
               </motion.div>
             )}

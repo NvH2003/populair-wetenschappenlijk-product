@@ -34,7 +34,7 @@ export default function ComparisonBarChart({ chartKey }) {
   const config = RESULT_CHARTS[chartKey]
   if (!config) return null
 
-  const { title, subtitle, comparison, pValue, pLabel, yMax, bars, compareInChart } = config
+  const { title, subtitle, comparison, yMax, bars, compareInChart } = config
   const highlighted = new Set(compareInChart ?? bars.map(b => b.name))
   const hasHighlight = compareInChart && compareInChart.length < bars.length
 
@@ -100,16 +100,6 @@ export default function ComparisonBarChart({ chartKey }) {
         Staafhoogte = gemiddelde persoonlijke acceptatie
         {hasHighlight && ' · Lichtere staven vallen buiten deze vergelijking'}
       </p>
-
-      {pValue != null && (
-        <p className="text-center text-sm mt-2 pt-3 border-t border-slate-700">
-          <span className="text-slate-400">p-waarde vergelijking: </span>
-          <span className="text-white font-mono font-semibold">p = {pValue}</span>
-          {pLabel && (
-            <span className="text-slate-500 text-xs ml-1">({pLabel})</span>
-          )}
-        </p>
-      )}
     </motion.div>
   )
 }

@@ -15,7 +15,7 @@ export default function Step11_Implications({ onReady }) {
         </p>
         <h2 className="text-3xl font-extrabold">Wat doe jij als SLO?</h2>
         <p className="text-slate-400 text-sm mt-1">
-          Drie scenario's uit de praktijk
+          Kies wat jij zou doen
         </p>
       </div>
 

@@ -10,14 +10,20 @@
  *   { id, daan: "text", condition: { ref: 'otherId', value: 'someValue' } }
  *   { id, daan: "text", isEnd: true }
  *   { id, daan: "text", waitForContinue: true, continueLabel: "Verder" }
+ *   { id, citedSentences: [{ text, citation }], waitForContinue: true }  ← hoverbare bronnen
  *   { id, chartKey: "h1", chartOnly: true, waitForContinue: true }  ← alleen figuur, geen tekst
  */
 
 import { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import ComparisonBarChart from './ComparisonBarChart'
+import CitedSentences from './CitedSentences'
 import { daanPhoto } from '../assets/images'
 import { capitalizeSentenceStarts } from '../utils/capitalizeSentenceStarts'
+
+function citedSentencesToSpeechText(sentences) {
+  return sentences.map(s => s.text).join('\n\n')
+}
 
 // Woorden + witruimte (incl. enters); werkt ook bij lange alinea's
 function tokenizeSpeech(text) {
@@ -82,8 +88,13 @@ function SpokenText({ text, speed = DEFAULT_SPEECH_TOKEN_MS, onDone, onProgress 
 }
 
 // ─── Bubbles ───────────────────────────────────────────────────────────────
-function DaanBubble({ text, live, onSpeechDone, onSpeechProgress }) {
-  const displayText = useMemo(() => capitalizeSentenceStarts(text), [text])
+function DaanBubble({ text, citedSentences, live, onSpeechDone, onSpeechProgress }) {
+  const speechText = useMemo(() => {
+    if (text) return capitalizeSentenceStarts(text)
+    if (citedSentences) return capitalizeSentenceStarts(citedSentencesToSpeechText(citedSentences))
+    return ''
+  }, [text, citedSentences])
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -92,15 +103,17 @@ function DaanBubble({ text, live, onSpeechDone, onSpeechProgress }) {
       className="max-w-[92%] bg-slate-700 border border-slate-600 rounded-2xl rounded-tl-sm px-5 py-3 shadow"
     >
       <p className="text-slate-100 text-base leading-relaxed">
-        {live
-          ? (
-            <SpokenText
-              text={displayText}
-              onDone={onSpeechDone}
-              onProgress={onSpeechProgress}
-            />
-          )
-          : <span className="whitespace-pre-wrap">{displayText}</span>
+        {citedSentences && !live
+          ? <CitedSentences sentences={citedSentences} />
+          : live
+            ? (
+              <SpokenText
+                text={speechText}
+                onDone={onSpeechDone}
+                onProgress={onSpeechProgress}
+              />
+            )
+            : <span className="whitespace-pre-wrap">{speechText}</span>
         }
       </p>
     </motion.div>
@@ -260,7 +273,12 @@ export default function DaanChat({ script, onComplete, onChoice, onItemFocus }) 
       return
     }
 
-    setThread(prev => [...prev, { type: 'daan', id: item.id, text: item.daan }])
+    setThread(prev => [...prev, {
+      type: 'daan',
+      id: item.id,
+      text: item.daan,
+      citedSentences: item.citedSentences,
+    }])
     setPendingId(item.id)
     setSpeaking(true)
 
@@ -358,6 +376,7 @@ export default function DaanChat({ script, onComplete, onChoice, onItemFocus }) 
                 <DaanBubble
                   key={item.id}
                   text={item.text}
+                  citedSentences={item.citedSentences}
                   live={isLive}
                   onSpeechDone={() => speechDoneRef.current?.()}
                   onSpeechProgress={isLive ? scrollThreadToEnd : undefined}

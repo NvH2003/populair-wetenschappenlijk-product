@@ -89,22 +89,18 @@ const ALL_BARS = [
 /** Grafiek alleen waar tabeldata voor persoonlijke acceptatie beschikbaar is */
 export const RESULT_CHARTS = {
   h1: {
-    title: 'Hypothese 1',
-    subtitle: 'Persoonlijke acceptatie (schaal 1–7)',
-    comparison: 'Alle drie boodschapcondities met elkaar vergeleken',
+    title: 'Resultaat',
+    subtitle: 'Gemiddelde acceptatie per boodschap (schaal 1–7)',
+    comparison: 'Drie boodschapcondities naast elkaar',
     compareInChart: ['Sanctionerend', 'Descriptief', 'Injunctief'],
-    pValue: '.809',
-    pLabel: 'niet significant (over de drie condities)',
     yMax: 7,
     bars: ALL_BARS,
   },
   h4: {
-    title: 'Hypothese 4',
-    subtitle: 'Persoonlijke acceptatie (schaal 1–7)',
-    comparison: 'Hoofdeffect identificatie met de harde kern (mediaansplit)',
+    title: 'Resultaat',
+    subtitle: 'Gemiddelde acceptatie (schaal 1–7)',
+    comparison: 'Lage versus hoge identificatie met de harde kern',
     compareInChart: ['Lage identificatie', 'Hoge identificatie'],
-    pValue: '< .001',
-    pLabel: 'significant (hoofdeffect identificatie)',
     yMax: 7,
     bars: [
       { name: 'Lage identificatie', value: 4.71, fill: '#64748b' },

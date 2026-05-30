@@ -6,31 +6,25 @@ import { ajaxIncident } from '../../assets/images'
 const introScript = [
   {
     id: 'intro',
-    daan: `Hoi, ik ben Daan, harde-kern supporter en ik zit al jaren week in, week uit op de tribune. Waar mijn club ook speelt, ik ben er!
+    daan: `Hoi, ik ben Daan. Harde-kern supporter. Als mijn club speelt, zit ik op de tribune.
 
-Jij bent waarschijnlijk SLO of iemand die wil weten hoe clubs het beste met fanatieke supporters kunnen communiceren om incidenten te voorkomen. Goed dat je er bent!
+Op die foto zie je waar we het over hebben: de wedstrijd tussen Ajax en FC Groningen werd na zes minuten gestaakt, omdat er vuurwerk op het veld terechtkwam en de spelers niet meer veilig waren.
 
-Ik neem je mee door een onderzoek van Noa van Helvoirt over de invloed van communicatie op de acceptatie van vuurwerkgebruik in een voetbalstadion.
+Jij bent SLO. Jij zoekt manieren om zulke momenten te voorkomen. Meestal zien clubs één route: verboden, regels en straffen op het scherm. Begrijpelijk. Alleen lost het het probleem in de praktijk nog niet structureel op.
 
-We bekijken samen wat er in het onderzoek werd verwacht en ik leg uit waarom. Daarna bekijken we de resultaten en de implicaties van het onderzoek. Misschien kun je er nog iets uit meenemen.
+De onderzoeker wilde weten of een andere aanpak wél verschil maakt: boodschappen over wat andere supporters doen of afkeuren, in plaats van dreigen. Daar draaide haar onderzoek om.
 
-Jij bepaalt trouwens zelf hoe diep je erin duikt. Wil je vooral het grote verhaal, prima. Wil je bij details of cijfers even stilstaan, dan kan dat ook: waar het kan, kies je zelf.
+De vraag die centraal stond luidde: In hoeverre dragen sociale norminterventies bij aan het ontmoedigen van vuurwerkgebruik door voetbalsupporters in Nederlandse voetbalstadions, in vergelijking met sanctionerende communicatie?
 
-Ik zal ook vragen stellen en jij mag dan antwoord geven. Ik ben ook benieuwd wat jij denkt. Ben je er klaar voor?`,
+Ik loop met je door het onderzoek heen. Jij bepaalt zelf hoe diep je erin duikt. En let op, want ik ga je ook een aantal vragen stellen. Zullen we beginnen?`,
     question: null,
     options: [
       { label: 'Ja, laten we beginnen', value: 'yes' },
     ],
   },
-  {
-    id: 'start',
-    daan: 'Mooi. Dan beginnen we met de eerste boodschap.',
-    condition: { ref: 'intro', value: 'yes' },
-    isEnd: true,
-  },
 ]
 
-export default function Step01_Incident({ onReady }) {
+export default function Step01_Incident({ onComplete }) {
   const [showDaan, setShowDaan] = useState(false)
 
   return (
@@ -57,18 +51,6 @@ export default function Step01_Incident({ onReady }) {
             Bron: Ajax Life.
           </figcaption>
         </motion.figure>
-        <p className="text-orange-400 text-sm font-semibold uppercase tracking-widest mb-3">
-          Ajax vs. FC Groningen, 2025
-        </p>
-        <h1 className="text-3xl md:text-4xl font-extrabold leading-tight mb-4">
-          Zes minuten.
-          <br />
-          <span className="text-orange-400">Toen was de wedstrijd voorbij.</span>
-        </h1>
-        <p className="text-slate-300 text-base leading-relaxed max-w-xl mx-auto">
-          Fakkels, rook, vuurwerk op het veld. De scheidsrechter staakte de wedstrijd.
-          Op welke manier kunnen we communiceren, zodat dit niet opnieuw gebeurt?
-        </p>
       </div>
 
       <AnimatePresence mode="wait">
@@ -80,6 +62,9 @@ export default function Step01_Incident({ onReady }) {
             exit={{ opacity: 0 }}
             className="flex flex-col items-center gap-4"
           >
+            <p className="text-white text-xl sm:text-2xl font-bold text-center max-w-lg leading-snug">
+              Hoe zorg je dat dit niet meer gebeurt?
+            </p>
             <motion.button
               onClick={() => setShowDaan(true)}
               className="bg-orange-500 hover:bg-orange-400 text-white font-bold text-base px-8 py-3.5 rounded-full transition-colors"
@@ -93,7 +78,7 @@ export default function Step01_Incident({ onReady }) {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <DaanChat script={introScript} onComplete={onReady} />
+            <DaanChat script={introScript} onComplete={onComplete} />
           </motion.div>
         )}
       </AnimatePresence>
